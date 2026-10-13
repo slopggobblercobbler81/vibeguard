@@ -8,11 +8,10 @@ scanner usable (extension gate, missing file, commented lines, the ReDoS line
 cap, and snippet truncation).
 """
 
-from pathlib import Path
 
 import pytest
 
-from vibeguard.rules import go_rules, java_rules, rust_rules, ruby_rules
+from vibeguard.rules import go_rules, java_rules, ruby_rules, rust_rules
 
 
 def rule_ids(findings) -> list[str]:
