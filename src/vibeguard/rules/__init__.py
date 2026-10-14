@@ -1,5 +1,2 @@
-from . import go_rules
-from . import java_rules
-from . import rust_rules
-from . import ruby_rules
+from . import go_rules, java_rules, ruby_rules, rust_rules
 

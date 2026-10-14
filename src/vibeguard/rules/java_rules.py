@@ -25,7 +25,7 @@ JAVA_PATTERNS = [
         re.compile(r"\.readObject\s*\(|new\s+ObjectInputStream\s*\("),
         "Object deserialization — attacker bytes can run arbitrary code",
         Severity.CRITICAL,
-        "Do not deserialize attacker-controlled bytes; if unavoidable, use an ObjectInputFilter allowlist of serializable classes.",
+        "Do not deserialize attacker-controlled bytes; if unavoidable, use an ObjectInputFilter allowlist.",
     ),
     (
         re.compile(r"Runtime\.getRuntime\(\)\.exec\s*\([^)]*[\"']\s*\+"),

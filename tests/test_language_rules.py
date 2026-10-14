@@ -8,7 +8,6 @@ scanner usable (extension gate, missing file, commented lines, the ReDoS line
 cap, and snippet truncation).
 """
 
-
 import pytest
 
 from vibeguard.rules import go_rules, java_rules, ruby_rules, rust_rules
@@ -48,7 +47,7 @@ def test_go_safe_idioms_are_not_reported(tmp_path):
     path.write_text(
         'exec.Command("ls", "-l")\n'
         'resp, _ := http.Get("https://api.example.com")\n'
-        "db, _ := sql.Open(\"postgres\", dsn)\n"
+        'db, _ := sql.Open("postgres", dsn)\n'
         'rows, _ := db.Query("SELECT * FROM t WHERE id = $1", id)\n',
         encoding="utf-8",
     )
@@ -99,7 +98,11 @@ def test_go_rule_truncates_long_snippet_in_output(tmp_path):
     ("label", "source", "severity"),
     [
         ("unsafe_block", "fn f() { unsafe { ptr.write(42) } }\n", "MEDIUM"),
-        ("command_injection", 'let c = std::process::Command::new("sh").arg(format!("-c {}", cmd)).output();\n', "CRITICAL"),
+        (
+            "command_injection",
+            'let c = std::process::Command::new("sh").arg(format!("-c {}", cmd)).output();\n',
+            "CRITICAL",
+        ),
         ("unwrap_on_user", "let value = user_value.unwrap();\n", "HIGH"),
     ],
 )
@@ -115,8 +118,7 @@ def test_rust_flags_each_pattern(tmp_path, label, source, severity):
 def test_rust_safe_idioms_are_not_reported(tmp_path):
     path = tmp_path / "safe.rs"
     path.write_text(
-        'let c = std::process::Command::new("ls").arg("-l").output();\n'
-        "let v = result.unwrap();\n",
+        'let c = std::process::Command::new("ls").arg("-l").output();\nlet v = result.unwrap();\n',
         encoding="utf-8",
     )
     assert rust_rules.scan_file(path) == []
@@ -163,7 +165,11 @@ def test_rust_rule_truncates_long_snippet_in_output(tmp_path):
 @pytest.mark.parametrize(
     ("label", "source", "severity"),
     [
-        ("deserialization", 'Object obj = new ObjectInputStream(new ByteArrayInputStream(bytes)).readObject();\n', "CRITICAL"),
+        (
+            "deserialization",
+            "Object obj = new ObjectInputStream(new ByteArrayInputStream(bytes)).readObject();\n",
+            "CRITICAL",
+        ),
         ("command_injection", 'Runtime.getRuntime().exec("cmd " + userInput);\n', "CRITICAL"),
         ("sql_injection", 'stmt.executeQuery("SELECT * FROM t WHERE id = " + id);\n', "CRITICAL"),
     ],
@@ -248,9 +254,7 @@ def test_ruby_safe_idioms_are_not_reported(tmp_path):
     """A fixed argv, a literal, and a fixed constant are the safe idiom."""
     path = tmp_path / "safe.rb"
     path.write_text(
-        "system(['rm', '-rf', dir])\n"
-        "eval(1 + 1)\n"
-        'klass = "Fixed".constantize\n',
+        "system(['rm', '-rf', dir])\neval(1 + 1)\nklass = \"Fixed\".constantize\n",
         encoding="utf-8",
     )
     assert ruby_rules.scan_file(path) == []
