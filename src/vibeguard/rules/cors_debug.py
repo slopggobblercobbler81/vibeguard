@@ -55,7 +55,7 @@ DEBUG_PATTERNS = [
 def scan_file(path: Path) -> list[Finding]:
     """Scan a single file for CORS and debug mode issues."""
     findings: list[Finding] = []
-    
+
     try:
         content = path.read_text(encoding="utf-8", errors="ignore")
     except (OSError, UnicodeDecodeError):
@@ -65,7 +65,7 @@ def scan_file(path: Path) -> list[Finding]:
         stripped = line.strip()
         if stripped.startswith(("#", "//")):
             continue
-        
+
         # Check CORS patterns
         for pattern, message in CORS_PATTERNS:
             match = re.search(pattern, line)
@@ -73,7 +73,7 @@ def scan_file(path: Path) -> list[Finding]:
                 snippet = line.strip()
                 if len(snippet) > 120:
                     snippet = snippet[:120] + "..."
-                
+
                 findings.append(
                     Finding(
                         rule_id="VGB-004",
@@ -86,7 +86,7 @@ def scan_file(path: Path) -> list[Finding]:
                         fix_hint="Restrict CORS origins to specific trusted domains",
                     )
                 )
-        
+
         # Check debug patterns
         for pattern, message in DEBUG_PATTERNS:
             match = re.search(pattern, line)
@@ -94,7 +94,7 @@ def scan_file(path: Path) -> list[Finding]:
                 snippet = line.strip()
                 if len(snippet) > 120:
                     snippet = snippet[:120] + "..."
-                
+
                 findings.append(
                     Finding(
                         rule_id="VGB-005",
@@ -107,5 +107,5 @@ def scan_file(path: Path) -> list[Finding]:
                         fix_hint="Set DEBUG=False and NODE_ENV=production for production deployments",
                     )
                 )
-    
+
     return findings

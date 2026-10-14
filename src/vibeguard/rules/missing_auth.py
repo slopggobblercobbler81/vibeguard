@@ -78,7 +78,7 @@ def scan_file(path: Path) -> list[Finding]:
         stripped = line.strip()
         if stripped.startswith(("#", "//")):
             continue
-        
+
         for pattern in ENDPOINT_PATTERNS:
             match = re.search(pattern, line)
             if match:
@@ -88,12 +88,12 @@ def scan_file(path: Path) -> list[Finding]:
                     if re.search(pub_pattern, line):
                         is_public = True
                         break
-                
+
                 if not is_public and not _has_auth(_endpoint_unit(lines, line_num - 1)):
                     snippet = line.strip()
                     if len(snippet) > 120:
                         snippet = snippet[:120] + "..."
-                    
+
                     findings.append(
                         Finding(
                             rule_id="VGB-006",
@@ -116,5 +116,5 @@ def scan_file(path: Path) -> list[Finding]:
                 # byte-identical findings that differ only in column. Break whether or
                 # not the endpoint was reported: either way it has been decided.
                 break
-    
+
     return findings

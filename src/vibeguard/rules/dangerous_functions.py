@@ -47,7 +47,7 @@ DANGEROUS_PATTERNS = [
 def scan_file(path: Path) -> list[Finding]:
     """Scan a single file for dangerous function usage."""
     findings: list[Finding] = []
-    
+
     try:
         content = path.read_text(encoding="utf-8", errors="ignore")
     except (OSError, UnicodeDecodeError):
@@ -57,7 +57,7 @@ def scan_file(path: Path) -> list[Finding]:
         stripped = line.strip()
         if stripped.startswith(("#", "//")):
             continue
-        
+
         if len(line) > MAX_LINE_LENGTH:
             line = line[:MAX_LINE_LENGTH]
 
@@ -67,7 +67,7 @@ def scan_file(path: Path) -> list[Finding]:
                 snippet = line.strip()
                 if len(snippet) > 120:
                     snippet = snippet[:120] + "..."
-                
+
                 findings.append(
                     Finding(
                         rule_id="VGB-003",
@@ -83,5 +83,5 @@ def scan_file(path: Path) -> list[Finding]:
                         ),
                     )
                 )
-    
+
     return findings

@@ -36,7 +36,7 @@ GO_PATTERNS = [
     ),
     (
         re.compile(r'sql\.Open\s*\([^)]*(?:fmt\.Sprintf|"\s*\+)'),
-        "sql.Open with a user-controlled DSN — injection / data-exfiltration risk",
+        "sql.Open with a user-controlled DSN — injection risk",
         Severity.HIGH,
         "Keep the data-source name fixed; do not splice user input into the connection string.",
     ),
@@ -44,7 +44,7 @@ GO_PATTERNS = [
         re.compile(r'\b(?:db|stmt)\.(?:Exec|Query|QueryRow)\s*\([^)]*(?:fmt\.Sprintf|"\s*\+)'),
         "database/sql query built with fmt.Sprintf or concatenation — SQL injection risk",
         Severity.CRITICAL,
-        "Use a parameterised query (db.Query('... $1 ...', args)) instead of formatting user input into the SQL string.",
+        "Use a parameterised query instead of formatting user input into the SQL string.",
     ),
 ]
 
