@@ -44,7 +44,7 @@ GO_PATTERNS = [
         re.compile(r'\b(?:db|stmt)\.(?:Exec|Query|QueryRow)\s*\([^)]*(?:fmt\.Sprintf|"\s*\+)'),
         "database/sql query built with fmt.Sprintf or concatenation — SQL injection risk",
         Severity.CRITICAL,
-        "Use a parameterised query instead of formatting user input into the SQL string.",
+        "Use a parameterised query instead of formatting " "user input into the SQL string.",
     ),
 ]
 

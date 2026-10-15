@@ -8,11 +8,10 @@ scanner usable (extension gate, missing file, commented lines, the ReDoS line
 cap, and snippet truncation).
 """
 
-from pathlib import Path
 
 import pytest
 
-from vibeguard.rules import go_rules, java_rules, rust_rules, ruby_rules
+from vibeguard.rules import go_rules, java_rules, ruby_rules, rust_rules
 
 
 def rule_ids(findings) -> list[str]:
@@ -100,7 +99,11 @@ def test_go_rule_truncates_long_snippet_in_output(tmp_path):
     ("label", "source", "severity"),
     [
         ("unsafe_block", "fn f() { unsafe { ptr.write(42) } }\n", "MEDIUM"),
-        ("command_injection", 'let c = std::process::Command::new("sh").arg(format!("-c {}", cmd)).output();\n', "CRITICAL"),
+(
+            "command_injection",
+            'let c = std::process::Command::new("sh").arg(format!("-c {", cmd)).output();\n',
+            "CRITICAL",
+        ),
         ("unwrap_on_user", "let value = user_value.unwrap();\n", "HIGH"),
     ],
 )
@@ -164,7 +167,11 @@ def test_rust_rule_truncates_long_snippet_in_output(tmp_path):
 @pytest.mark.parametrize(
     ("label", "source", "severity"),
     [
-        ("deserialization", 'Object obj = new ObjectInputStream(new ByteArrayInputStream(bytes)).readObject();\n', "CRITICAL"),
+        (
+            "deserialization",
+            'Object obj = new ObjectInputStream(new ByteArrayInputStream(bytes)).readObject();\n',
+            "CRITICAL",
+        ),
         ("command_injection", 'Runtime.getRuntime().exec("cmd " + userInput);\n', "CRITICAL"),
         ("sql_injection", 'stmt.executeQuery("SELECT * FROM t WHERE id = " + id);\n', "CRITICAL"),
     ],
