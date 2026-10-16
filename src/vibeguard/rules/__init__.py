@@ -1,2 +1,6 @@
-from . import go_rules, java_rules, ruby_rules, rust_rules
-
+from . import (
+    go_rules,  # noqa: F401
+    java_rules,  # noqa: F401
+    ruby_rules,  # noqa: F401
+    rust_rules,  # noqa: F401
+)

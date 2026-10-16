@@ -18,7 +18,7 @@ MAX_LINE_LENGTH = 50_000  # 50 KB
 RUBY_EXTENSIONS = {".rb", ".erb"}
 
 # A word that marks a value as user-sourced on a line.
-_USER_TOKEN = r"\b(?:params|user|input|request|req|args|body)\w*"
+_USER_PATTERN = r"\b(?:params|user|input|request|req|args|body)\w*"
 
 # Pre-compiled Ruby patterns: (compiled regex, message, severity, fix_hint).
 RUBY_PATTERNS = [
@@ -35,7 +35,7 @@ RUBY_PATTERNS = [
         "Do not eval user-controlled strings; use an allowlist of operations or a safe expression parser.",
     ),
     (
-        re.compile(rf"{_USER_TOKEN}[^;]*?\.constantize"),
+        re.compile(rf"{_USER_PATTERN}[^;]*?\.constantize"),
         "constantize() resolving a constant from user input — arbitrary object resolution",
         Severity.HIGH,
         "Map user input to an explicit allowlist of classes instead of calling constantize on it.",

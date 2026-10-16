@@ -19,7 +19,7 @@ RUST_EXTENSIONS = {".rs"}
 
 # A word that marks a value as user-sourced on a line; ``\w*`` lets it absorb
 # ``_value`` / ``_input`` suffixes so ``user_value`` counts.
-_USER_TOKEN = r"\b(?:user|input|request|args|param|body|stdin|env|payload|form)\w*"
+_USER_PATTERN = r"\b(?:user|input|request|args|param|body|stdin|env|payload|form)\w*"
 
 # Pre-compiled Rust patterns: (compiled regex, message, severity, fix_hint).
 RUST_PATTERNS = [
@@ -38,9 +38,7 @@ RUST_PATTERNS = [
         "Pass a fixed argv to Command; never build an argument with format! or from user input.",
     ),
     (
-        re.compile(
-            rf"{_USER_TOKEN}.*\b(?:unwrap|expect)\s*\(|\b(?:unwrap|expect)\s*\([^)]*{_USER_TOKEN}"
-        ),
+        re.compile(rf"{_USER_PATTERN}.*\b(?:unwrap|expect)\s*\(|\b(?:unwrap|expect)\s*\([^)]*{_USER_PATTERN}"),
         "unwrap()/expect() on a user-sourced value — a bad value panics the thread",
         Severity.HIGH,
         "Propagate the Result instead of calling unwrap()/expect() on externally-sourced data.",
