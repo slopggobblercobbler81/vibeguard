@@ -467,11 +467,17 @@ def test_route_without_methods_kwarg_is_still_detected(tmp_path):
 
 def test_route_with_methods_kwarg_still_detected(tmp_path):
     """Positive control: @app.route with methods=[...] is still detected."""
-    path = write(tmp_path, "app.py", "@app.route('/api/users', methods=['POST'])\ndef create_user():\n    return jsonify({})\n")
+    path = write(
+        tmp_path, "app.py",
+        "@app.route('/api/users', methods=['POST'])\ndef create_user():\n    return jsonify({})\n",
+    )
     assert "VGB-006" in rule_ids(missing_auth.scan_file(path))
 
 
 def test_route_without_methods_carrying_auth_is_not_reported(tmp_path):
     """Auth on a no-methods route suppresses the finding."""
-    path = write(tmp_path, "app.py", "@login_required\n@app.route('/api/users')\ndef get_users():\n    return jsonify([])\n")
+    path = write(
+        tmp_path, "app.py",
+        "@login_required\n@app.route('/api/users')\ndef get_users():\n    return jsonify([])\n",
+    )
     assert missing_auth.scan_file(path) == []
