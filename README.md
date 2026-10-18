@@ -1,4 +1,13 @@
 
+## Quickstart
+
+Getting started in 5 minutes:
+
+```bash
+# Basic setup
+```
+
+
 # VibeGuard
 
 ![CI](https://github.com/yunaremaia/vibeguard/actions/workflows/ci.yml/badge.svg)

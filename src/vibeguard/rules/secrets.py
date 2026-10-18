@@ -55,10 +55,10 @@ SKIP_FILES = {"package-lock.json", "yarn.lock", "pnpm-lock.yaml", "Cargo.lock", 
 def scan_file(path: Path) -> list[Finding]:
     """Scan a single file for hardcoded secrets."""
     findings: list[Finding] = []
-    
+
     if path.name in SKIP_FILES:
         return findings
-    
+
     try:
         content = path.read_text(encoding="utf-8", errors="ignore")
     except (OSError, UnicodeDecodeError):
@@ -69,7 +69,7 @@ def scan_file(path: Path) -> list[Finding]:
         stripped = line.strip()
         if stripped.startswith(("#", "//", "*")):
             continue
-        
+
         if len(line) > MAX_LINE_LENGTH:
             line = line[:MAX_LINE_LENGTH]
 
@@ -80,7 +80,7 @@ def scan_file(path: Path) -> list[Finding]:
                 snippet = line.strip()
                 if len(snippet) > 120:
                     snippet = snippet[:120] + "..."
-                
+
                 findings.append(
                     Finding(
                         rule_id="VGB-001",
@@ -96,5 +96,5 @@ def scan_file(path: Path) -> list[Finding]:
                         ),
                     )
                 )
-    
+
     return findings

@@ -9,7 +9,7 @@ from .models import ScanResult, Severity
 def format_text(result: ScanResult) -> str:
     """Format results as colored text for terminal output."""
     lines: list[str] = []
-    
+
     # Header
     lines.append("=" * 70)
     lines.append("VibeGuard Security Scan Report")
@@ -19,12 +19,12 @@ def format_text(result: ScanResult) -> str:
     lines.append(f"Lines scanned: {result.lines_scanned}")
     lines.append(f"Findings: {len(result.findings)}")
     lines.append("")
-    
+
     if not result.findings:
         lines.append("✅ No security issues found!")
         lines.append("")
         return "\n".join(lines)
-    
+
     # Summary by severity
     by_sev = result.by_severity()
     lines.append("Summary:")
@@ -34,16 +34,16 @@ def format_text(result: ScanResult) -> str:
             icon = {"CRITICAL": "🔴", "HIGH": "🟠", "MEDIUM": "🟡", "LOW": "🔵"}[sev]
             lines.append(f"  {icon} {sev}: {count}")
     lines.append("")
-    
+
     # Detailed findings
     lines.append("-" * 70)
     lines.append("Detailed Findings:")
     lines.append("-" * 70)
-    
+
     # Sort by severity
     severity_order = {Severity.CRITICAL: 0, Severity.HIGH: 1, Severity.MEDIUM: 2, Severity.LOW: 3}
     sorted_findings = sorted(result.findings, key=lambda f: severity_order.get(f.severity, 99))
-    
+
     for i, finding in enumerate(sorted_findings, 1):
         sev_icon = {
             Severity.CRITICAL: "🔴",
@@ -51,7 +51,7 @@ def format_text(result: ScanResult) -> str:
             Severity.MEDIUM: "🟡",
             Severity.LOW: "🔵",
         }.get(finding.severity, "⚪")
-        
+
         lines.append(f"\n[{i}] {sev_icon} {finding.rule_id} — {finding.severity.value}")
         lines.append(f"    File: {finding.file}:{finding.line}")
         lines.append(f"    Issue: {finding.message}")
@@ -59,12 +59,12 @@ def format_text(result: ScanResult) -> str:
             lines.append(f"    Code: {finding.snippet}")
         if finding.fix_hint:
             lines.append(f"    Fix: {finding.fix_hint}")
-    
+
     lines.append("")
     lines.append("-" * 70)
     lines.append(f"Total: {len(result.findings)} issue(s) found")
     lines.append("")
-    
+
     return "\n".join(lines)
 
 
@@ -112,7 +112,7 @@ def format_sarif(result: ScanResult) -> str:
             }
         ],
     }
-    
+
     # Collect unique rules
     rules_map: dict[str, dict] = {}
     for f in result.findings:
@@ -125,9 +125,9 @@ def format_sarif(result: ScanResult) -> str:
                     "level": _sarif_level(f.severity),
                 },
             }
-    
+
     sarif["runs"][0]["tool"]["driver"]["rules"] = list(rules_map.values())
-    
+
     # Add results
     for f in result.findings:
         sarif["runs"][0]["results"].append(
@@ -149,7 +149,7 @@ def format_sarif(result: ScanResult) -> str:
                 ],
             }
         )
-    
+
     return json.dumps(sarif, indent=2)
 
 
