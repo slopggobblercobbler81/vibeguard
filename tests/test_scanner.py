@@ -14,9 +14,13 @@ from vibeguard.rules import (
     client_side,
     cors_debug,
     dangerous_functions,
+    go_rules,
     insecure_design,
+    java_rules,
     llm_output,
     missing_auth,
+    ruby_rules,
+    rust_rules,
     secret_entropy,
     secrets,
     sql_injection,
@@ -263,6 +267,10 @@ def test_rules_return_no_findings_for_missing_file(tmp_path):
         insecure_design,
         client_side,
         llm_output,
+        go_rules,
+        rust_rules,
+        java_rules,
+        ruby_rules,
     ):
         assert rule.scan_file(missing) == [], rule.__name__
 
@@ -279,6 +287,10 @@ def test_all_rules_are_registered_in_scanner():
         insecure_design.scan_file,
         client_side.scan_file,
         llm_output.scan_file,
+        go_rules.scan_file,
+        rust_rules.scan_file,
+        java_rules.scan_file,
+        ruby_rules.scan_file,
         }
     assert all(callable(r) for r in RULES)
     assert all(_rule_module_name(r) for r in RULES)

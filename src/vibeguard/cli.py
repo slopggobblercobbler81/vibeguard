@@ -27,13 +27,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="File or directory to scan (default: current directory)",
     )
     parser.add_argument(
-        "-f", "--format",
+        "-f",
+        "--format",
         choices=["text", "json", "sarif"],
         default="text",
         help="Output format (default: text)",
     )
     parser.add_argument(
-        "-o", "--output",
+        "-o",
+        "--output",
         type=str,
         default=None,
         help="Output file (default: stdout)",
@@ -45,7 +47,9 @@ def build_parser() -> argparse.ArgumentParser:
         help="Minimum severity to report (default: LOW)",
     )
     parser.add_argument(
-        "--version", "-V", "-v",
+        "--version",
+        "-V",
+        "-v",
         action="version",
         version=f"%(prog)s {__version__}",
     )
@@ -55,23 +59,20 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = build_parser().parse_args()
-    
+
     target = Path(args.target)
     if not target.exists():
         print(f"Error: {target} does not exist", file=sys.stderr)
         return 2
-    
+
     # Run scan
     result = scan_directory(target)
-    
+
     # Filter by minimum severity
     severity_order = {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 2, "LOW": 3}
     min_level = severity_order.get(args.min_severity, 3)
-    result.findings = [
-        f for f in result.findings
-        if severity_order.get(f.severity.value, 99) <= min_level
-    ]
-    
+    result.findings = [f for f in result.findings if severity_order.get(f.severity.value, 99) <= min_level]
+
     # Format output
     if args.format == "json":
         output = format_json(result)
@@ -79,13 +80,13 @@ def main() -> int:
         output = format_sarif(result)
     else:
         output = format_text(result)
-    
+
     # Write output
     if args.output:
         Path(args.output).write_text(output)
     else:
         print(output)
-    
+
     # Return exit code based on findings
     return 1 if result.has_findings else 0
 

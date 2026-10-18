@@ -64,12 +64,39 @@ class ScanResult:
 
 # File extensions we support
 SUPPORTED_EXTENSIONS = {
-    ".py", ".js", ".ts", ".jsx", ".tsx", ".go", ".rs", ".java", ".rb", ".php",
-    ".yaml", ".yml", ".json", ".toml", ".ini", ".cfg", ".env",
+    ".py",
+    ".js",
+    ".ts",
+    ".jsx",
+    ".tsx",
+    ".go",
+    ".rs",
+    ".java",
+    ".rb",
+    ".php",
+    ".yaml",
+    ".yml",
+    ".json",
+    ".toml",
+    ".ini",
+    ".cfg",
+    ".env",
 }
 
 # Files/directories to skip
 SKIP_PATTERNS = {
-    "node_modules", ".git", "__pycache__", ".venv", "venv", "dist", "build",
-    ".next", ".nuxt", "target", "vendor", ".tox", ".mypy_cache", ".pytest_cache",
+    "node_modules",
+    ".git",
+    "__pycache__",
+    ".venv",
+    "venv",
+    "dist",
+    "build",
+    ".next",
+    ".nuxt",
+    "target",
+    "vendor",
+    ".tox",
+    ".mypy_cache",
+    ".pytest_cache",
 }

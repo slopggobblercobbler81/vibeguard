@@ -52,9 +52,7 @@ SENSITIVE_HANDLER_RE = re.compile(
 )
 
 # Routes under an /api prefix — the surface abuse is aimed at.
-API_ROUTE_RE = re.compile(
-    r"""(?i)@\w+\.(?:get|post|put|delete|patch|route)\s*\(\s*['"][^'"]*/api/"""
-)
+API_ROUTE_RE = re.compile(r"""(?i)@\w+\.(?:get|post|put|delete|patch|route)\s*\(\s*['"][^'"]*/api/""")
 
 # Handlers that move an object between states.
 STATE_TRANSITION_RE = re.compile(
