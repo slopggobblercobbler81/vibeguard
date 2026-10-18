@@ -1,11 +1,4 @@
 
-## Quickstart
-
-Getting started in 5 minutes:
-
-```bash
-# Basic setup
-```
 
 
 # VibeGuard
