@@ -9,8 +9,8 @@ from ..models import Finding, Severity
 ENDPOINT_PATTERNS = [
     # Python Flask/FastAPI
     r"""(?i)@(?:app|router|blueprint)\.(?:get|post|put|delete|patch)\s*\(['"]([^'"]+)['"]""",
-    # Python Flask with methods
-    r"""(?i)@(?:app|router)\.route\s*\(['"]([^'"]+)['"].*methods\s*=\s*\[.*(?:POST|PUT|DELETE).*\]""",
+    # Python Flask with or without methods
+    r"""(?i)@(?:app|router)\.route\s*\(\s*['"]([^'"]+)['"]\s*(?:,\s*methods\s*=\s*\[.*(?:POST|PUT|DELETE).*\])?\s*\)""",
     # Express.js
     r"""(?i)(?:app|router)\.(?:get|post|put|delete|patch)\s*\(\s*['"]([^'"]+)['"]""",
     # Go net/http

@@ -450,3 +450,34 @@ def test_multi_line_decorator_without_a_quoted_path_is_still_reported(tmp_path):
     """
     path = write(tmp_path, "app.py", '@app.get(\n    "/admin/users",\n)\ndef list_users():\n    pass\n')
     assert [f.line for f in missing_auth.scan_file(path)] == [1]
+
+
+def test_route_without_methods_kwarg_is_still_detected(tmp_path):
+    """Regression #147: @app.route('/path') without methods= is still an endpoint.
+
+    The old ENDPOINT_PATTERNS only matched when methods=[...] was present, so a
+    plain @app.route('/api/users') was invisible to VGB-006.
+    """
+    path = write(tmp_path, "app.py", "@app.route('/api/users')\ndef get_users():\n    return jsonify([])\n")
+    findings = missing_auth.scan_file(path)
+    assert "VGB-006" in rule_ids(findings)
+    finding = next(f for f in findings if f.rule_id == "VGB-006")
+    assert finding.line == 1
+
+
+def test_route_with_methods_kwarg_still_detected(tmp_path):
+    """Positive control: @app.route with methods=[...] is still detected."""
+    path = write(
+        tmp_path, "app.py",
+        "@app.route('/api/users', methods=['POST'])\ndef create_user():\n    return jsonify({})\n",
+    )
+    assert "VGB-006" in rule_ids(missing_auth.scan_file(path))
+
+
+def test_route_without_methods_carrying_auth_is_not_reported(tmp_path):
+    """Auth on a no-methods route suppresses the finding."""
+    path = write(
+        tmp_path, "app.py",
+        "@login_required\n@app.route('/api/users')\ndef get_users():\n    return jsonify([])\n",
+    )
+    assert missing_auth.scan_file(path) == []
