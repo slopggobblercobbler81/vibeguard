@@ -32,7 +32,7 @@ GUARD_LOOKAHEAD_LINES = 3
 
 # A whole string literal, quotes included, and nothing else. A template
 # literal, a concatenation or a bare variable fails this: all three are sinks.
-LITERAL_RE = re.compile(r"""^(['"])[^'"]*\1\)?\s*;?\s*$""")
+LITERAL_RE = re.compile(r"""^(['"])(?:\\.|(?!\1)[^\\])*\1\)?\s*;?\s*$""")
 
 # Markup sinks. ``=(?!=)`` keeps ``innerHTML === '<b>ok</b>'`` out: a comparison
 # executes nothing. ``insertAdjacentHTML`` is a call, so its value is the

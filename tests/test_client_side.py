@@ -56,6 +56,26 @@ def test_html_sink_with_plain_literal_is_silent(tmp_path):
     source = "el.innerHTML = '<b>static</b>';\n"
     assert client_side.scan_file(write(tmp_path, "app.js", source)) == []
 
+def test_html_sink_with_escaped_quote_literal_is_silent(tmp_path):
+    """#144: string literals with escaped quotes must not be flagged as DOM XSS."""
+    for literal in (
+        r"'it\'s a test'",
+        r'"say \"hi\""',
+        r"'she said \"hello\"'",
+        r'"it\'s fine"',
+        r"'escaped \\\\ backslash'",
+    ):
+        source = f"el.innerHTML = {literal};\n"
+        findings = client_side.scan_file(write(tmp_path, "app.js", source))
+        assert findings == [], f"expected no findings for {literal}, got {findings}"
+
+
+def test_document_write_with_escaped_quote_is_silent(tmp_path):
+    """#144: document.write with escaped quotes is a literal and must not be flagged."""
+    source = r"document.write('it\'s a test');" + "\n"
+    assert client_side.scan_file(write(tmp_path, "app.js", source)) == []
+
+
 
 def test_comparison_to_literal_is_not_a_sink(tmp_path):
     source = "if (el.innerHTML === '<b>ok</b>') { render(); }\n"

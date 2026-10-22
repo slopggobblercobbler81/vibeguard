@@ -83,7 +83,7 @@ def main() -> int:
 
     # Write output
     if args.output:
-        Path(args.output).write_text(output)
+        Path(args.output).write_text(output, encoding="utf-8")
     else:
         print(output)
 
