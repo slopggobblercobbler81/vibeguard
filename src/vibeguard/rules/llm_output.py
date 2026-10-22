@@ -69,9 +69,14 @@ MODEL_OUTPUT_RE = re.compile(
       \s* \. \s* create
     | \. \s* generate_content \s* \(
     | (?: ^ | [\s(=,]) \s*
-      \b (?: llm | model | gpt | openai | anthropic | gemini | claude
-          | generation | completion | chat | agent | bot )
+      \b (?: llm | model | gpt | chatgpt | openai | anthropic | gemini | claude
+          | generation | completion )
       (?: _ | \- | \. ) [\w]+ \b
+    | (?: ^ | [\s(=,]) \s*
+      \b (?: agent | bot | chat )
+      (?: _ | \- | \. )
+      (?: output | response | reply | result | code | command | completion
+        | text | content | yaml | json | blob | payload ) \b
     | (?: ^ | [\s(=,]) \s*
       \b ai (?: _ | \- | \. ) [\w]+ \b
     """

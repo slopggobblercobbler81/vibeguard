@@ -136,6 +136,26 @@ def test_ai_prefixed_variable_with_separator_is_flagged(tmp_path):
     findings = llm_output.scan_file(write(tmp_path, "app.py", source))
     assert rule_ids(findings) == [RULE_ID]
 
+def test_ordinary_chat_variables_are_silent(tmp_path):
+    """#145: ordinary chat and agent variables like chat_message or agent_id must not trigger VGB-050."""
+    source = (
+        "chat_message = get_user_input()\n"
+        "exec(chat_message)\n"
+        "eval(chat_history)\n"
+        "os.system(chat_id)\n"
+        "exec(agent_id)\n"
+        "eval(bot_token)\n"
+    )
+    assert llm_output.scan_file(write(tmp_path, "app.py", source)) == []
+
+
+def test_chat_output_variable_is_flagged(tmp_path):
+    """A chat variable with an output-shaped qualifier is flagged."""
+    source = "exec(chat_response)\n"
+    findings = llm_output.scan_file(write(tmp_path, "app.py", source))
+    assert rule_ids(findings) == [RULE_ID]
+
+
 
 def test_bare_model_word_without_a_qualifier_is_silent(tmp_path):
     """``exec(model)`` names no model output, so it is left to VGB-003's shape."""
