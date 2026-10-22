@@ -151,6 +151,18 @@ def test_scan_directory_skips_oversized_single_file_via_max_size(vulnerable_file
     assert result.files_scanned == 0
     assert result.findings == []
 
+def test_scan_directory_scans_single_file_under_skip_pattern_ancestor(tmp_path):
+    """#152: an ancestor named target/ or build/ must not suppress a direct single-file scan."""
+    for skip_name in ("target", "build", "dist", ".venv"):
+        sub = tmp_path / skip_name / "sub"
+        sub.mkdir(parents=True)
+        file = sub / "app.py"
+        file.write_text('API_KEY = "REDACTEDFAKEKEYDONTUSE0000"\n', encoding="utf-8")
+        result = scan_directory(file)
+        assert result.files_scanned == 1
+        assert result.has_findings
+
+
 
 # ---------------------------------------------------------------------------
 # scan_directory: directory targets

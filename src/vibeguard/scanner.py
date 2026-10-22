@@ -103,7 +103,7 @@ def scan_directory(target: Path, max_size: int = 10 * 1024 * 1024) -> ScanResult
         resolved_target = target
 
     if target.is_file():
-        if should_scan(target):
+        if should_scan(target, base=target.parent):
             # SECURITY: skip oversized single files
             try:
                 if target.stat().st_size > max_size:
