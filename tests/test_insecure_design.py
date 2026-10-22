@@ -53,6 +53,21 @@ def test_sensitive_handler_with_authorization_is_silent(tmp_path):
     )
     assert insecure_design.scan_file(write(tmp_path, "app.py", source)) == []
 
+def test_sensitive_handler_with_jwt_or_passport_or_depends_is_silent(tmp_path):
+    """#146: @jwt_required, @authenticate, passport, and Depends auth guards suppress VGB-020."""
+    cases = [
+        "@jwt_required()\ndef delete_account():\n    pass\n",
+        "@authenticate\ndef delete_account():\n    pass\n",
+        "@passport.authenticate('jwt')\ndef delete_account():\n    pass\n",
+        "@router.delete('/user')\ndef remove_user(user=Depends(get_current_user)):\n    pass\n",
+        "@router.delete('/user')\ndef remove_user(token=Depends(verify_token)):\n    pass\n",
+        "@router.delete('/user')\ndef remove_user(token=Depends(oauth2_scheme)):\n    pass\n",
+    ]
+    for source in cases:
+        findings = insecure_design.scan_file(write(tmp_path, "auth.py", source))
+        assert "VGB-020" not in rule_ids(findings), f"expected VGB-020 suppressed for: {source}"
+
+
 
 # ---------------------------------------------------------------------------
 # VGB-021 — API endpoint without rate limiting

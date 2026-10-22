@@ -17,10 +17,11 @@ from .missing_auth import _endpoint_unit
 
 # Authorization checks that make a sensitive handler acceptable (VGB-020).
 AUTH_GUARD_PATTERNS = [
-    r"""(?i)(?:login_required|auth_required|require_auth|check_permission|has_permission)""",
-    r"""(?i)(?:authorize|authorized|permission_required|roles_required)""",
-    r"""(?i)Depends\s*\(\s*(?:get_current_user|verify_token|require_admin)""",
+    r"""(?i)(?:login_required|auth_required|require_auth|check_permission|has_permission|jwt_required)""",
+    r"""(?i)(?:authorize|authorized|authenticate|authenticated|passport(?:\.authenticate)?|permission_required|roles_required)""",
+    r"""(?i)Depends\s*\(\s*(?:get_current_user|get_current_active_user|verify_token|require_admin|oauth2_scheme)""",
     r"""(?i)(?:is_admin|is_staff|require_perms)""",
+    r"""(?i)(?:jwt|bearer|token.*verify)""",
 ]
 
 # Rate limiting that makes an API route acceptable (VGB-021).
